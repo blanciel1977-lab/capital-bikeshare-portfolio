@@ -1,0 +1,12 @@
+,importance
+workingday,0.015528907
+weekday,0.017458549
+windspeed,0.018411532
+holiday,0.019121956
+mnth,0.020052133
+hum,0.029174533
+weathersit,0.06216539
+temp,0.1513794
+atemp,0.1612243
+season,0.16598533
+yr,0.33949804
