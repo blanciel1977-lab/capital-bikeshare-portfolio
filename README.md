@@ -27,7 +27,7 @@ Capital Bikeshare(미국 워싱턴 D.C. 일대) 일별 자전거 대여 데이�
 ## 프로젝트 구조
 
 ```
-nyc-bikeshare-portfolio/
+capital-bikeshare-portfolio/
 ├── README.md                  이 파일
 ├── requirements.txt            의존성 목록
 ├── data/
@@ -58,7 +58,7 @@ nyc-bikeshare-portfolio/
 # 1. 의존성 설치
 pip install -r requirements.txt
 
-# 2. 프로젝트 루트(nyc-bikeshare-portfolio/)에서 순서대로 실행
+# 2. 프로젝트 루트(capital-bikeshare-portfolio/)에서 순서대로 실행
 python src/01_data_quality_check.py
 python src/02_eda_visualizations.py
 python src/03_train_test_split.py     # data/train.csv, data/test.csv 생성
