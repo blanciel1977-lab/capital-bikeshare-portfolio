@@ -51,7 +51,12 @@ order = ['맑음', '안개/흐림', '약한눈/비']
 fig, ax = plt.subplots(figsize=(8, 6))
 data = [df[df['weather_name'] == w]['cnt'].values for w in order]
 counts = [len(d) for d in data]
-bp = ax.boxplot(data, labels=[f'{w}\n(n={n})' for w, n in zip(order, counts)], patch_artist=True)
+box_labels = [f'{w}\n(n={n})' for w, n in zip(order, counts)]
+# matplotlib 3.9에서 boxplot의 labels 인자가 tick_labels로 바뀌었다(구버전은 반대로 tick_labels 미지원).
+try:
+    bp = ax.boxplot(data, tick_labels=box_labels, patch_artist=True)
+except TypeError:
+    bp = ax.boxplot(data, labels=box_labels, patch_artist=True)
 colors = ['#f2c14e', '#7fa6c7', '#5b6c8f']
 for patch, c in zip(bp['boxes'], colors):
     patch.set_facecolor(c)

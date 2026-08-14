@@ -9,7 +9,7 @@ import numpy as np
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
-from common import load_best_params
+from common import get_feature_cols, load_best_params
 
 train_df = pd.read_csv('data/train.csv')
 test_df = pd.read_csv('data/test.csv')
@@ -22,8 +22,7 @@ yr_baseline = train_df.groupby('yr')['cnt'].mean()
 train_df['cnt_relative'] = train_df['cnt'] / train_df['yr'].map(yr_baseline)
 test_df['cnt_relative'] = test_df['cnt'] / test_df['yr'].map(yr_baseline)
 
-feature_cols = [c for c in train_df.columns
-                 if c not in ['instant', 'dteday', 'cnt', 'casual', 'registered', 'yr', 'cnt_relative']]
+feature_cols = get_feature_cols(train_df, extra_exclude=['yr', 'cnt_relative'])
 X_train, y_train = train_df[feature_cols], train_df['cnt_relative']
 X_test, y_test = test_df[feature_cols], test_df['cnt_relative']
 

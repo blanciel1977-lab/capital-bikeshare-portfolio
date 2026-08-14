@@ -5,36 +5,34 @@
 - casual 계수: 1.0000, registered 계수: 1.0000
 
 ## (2) casual/registered 제외 후 재학습 (11개 변수)
-- RMSE: 1166.02
-- MAE: 863.86
-- R2: 0.6131
+- RMSE: 1163.07
+- MAE: 862.73
+- R2: 0.6151
 
 ### 원 스케일 회귀계수
 | 변수 | 계수 |
 |---|---|
-| atemp | 6272.92 |
-| windspeed | -2232.16 |
-| yr | 2026.31 |
-| hum | -1003.68 |
-| temp | -614.89 |
-| weathersit | -506.21 |
-| holiday | -375.41 |
-| season | 296.74 |
-| workingday | 69.39 |
-| weekday | 46.08 |
-| mnth | 27.52 |
+| atemp | 5581.10 |
+| windspeed | -2258.81 |
+| yr | 2027.18 |
+| hum | -994.02 |
+| weathersit | -508.04 |
+| holiday | -380.16 |
+| season | 295.46 |
+| workingday | 69.93 |
+| weekday | 46.02 |
+| mnth | 27.97 |
 
 ### 표준화 회귀계수 (단위를 맞춘 상대적 영향력)
 | 변수 | 표준화 계수 |
 |---|---|
-| atemp | 1051.79 |
-| yr | 980.98 |
-| season | 307.96 |
-| weathersit | -276.56 |
-| windspeed | -169.91 |
-| hum | -148.33 |
-| temp | -115.68 |
-| weekday | 92.36 |
-| mnth | 88.82 |
-| holiday | -61.28 |
-| workingday | 32.24 |
+| yr | 981.41 |
+| atemp | 935.79 |
+| season | 306.63 |
+| weathersit | -277.56 |
+| windspeed | -171.93 |
+| hum | -146.91 |
+| weekday | 92.24 |
+| mnth | 90.26 |
+| holiday | -62.06 |
+| workingday | 32.48 |

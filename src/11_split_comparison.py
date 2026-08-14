@@ -20,10 +20,10 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
-from common import load_best_params
+from common import get_feature_cols, load_best_params
 
 df = pd.read_csv('data/day.csv').sort_values('instant').reset_index(drop=True)
-feature_cols = [c for c in df.columns if c not in ['instant', 'dteday', 'cnt', 'casual', 'registered']]
+feature_cols = get_feature_cols(df)
 
 # 세 방식 모두 동일 하이퍼파라미터(07단계 튜닝 결과)로 고정해, 분할 방식의 효과만 비교한다.
 PARAMS = load_best_params()

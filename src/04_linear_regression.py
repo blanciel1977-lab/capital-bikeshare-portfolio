@@ -10,6 +10,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+from common import get_feature_cols
+
 train_df = pd.read_csv('data/train.csv')
 test_df = pd.read_csv('data/test.csv')
 
@@ -34,7 +36,7 @@ lines.append(f"- casual 계수: {dict(zip(leak_cols, model_leak.coef_)).get('cas
               f"registered 계수: {dict(zip(leak_cols, model_leak.coef_)).get('registered'):.4f}\n")
 
 # --- (2) casual/registered 제외 후 재학습 ---
-feature_cols = [c for c in train_df.columns if c not in ['instant', 'dteday', 'cnt', 'casual', 'registered']]
+feature_cols = get_feature_cols(train_df)
 X_train, y_train = train_df[feature_cols], train_df['cnt']
 X_test, y_test = test_df[feature_cols], test_df['cnt']
 

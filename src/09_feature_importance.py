@@ -6,13 +6,13 @@ from xgboost import XGBRegressor
 import matplotlib.pyplot as plt
 import matplotlib
 
-from common import load_best_params
+from common import get_feature_cols, load_best_params
 
 matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] = False
 
 train_df = pd.read_csv('data/train.csv')
-feature_cols = [c for c in train_df.columns if c not in ['instant', 'dteday', 'cnt', 'casual', 'registered']]
+feature_cols = get_feature_cols(train_df)
 X_train, y_train = train_df[feature_cols], train_df['cnt']
 
 name_map = {
