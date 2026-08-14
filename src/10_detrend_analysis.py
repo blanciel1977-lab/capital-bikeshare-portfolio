@@ -9,22 +9,25 @@ import numpy as np
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+from common import load_best_params
+
 train_df = pd.read_csv('data/train.csv')
 test_df = pd.read_csv('data/test.csv')
-full_df = pd.read_csv('data/day.csv')
 
-yr_avg = full_df.groupby('yr')['cnt'].transform('mean')
-full_df['cnt_relative'] = full_df['cnt'] / yr_avg
+# 연도별 기준선(평균)은 반드시 '학습셋만'으로 계산한다.
+# 전체 데이터로 평균을 내면 테스트 구간의 정보가 타깃에 섞여 들어가(누수),
+# 하필 '일반화 가능성'을 검증하는 이 분석의 결론이 낙관적으로 왜곡된다.
+yr_baseline = train_df.groupby('yr')['cnt'].mean()
 
-train_df = train_df.merge(full_df[['instant', 'cnt_relative']], on='instant')
-test_df = test_df.merge(full_df[['instant', 'cnt_relative']], on='instant')
+train_df['cnt_relative'] = train_df['cnt'] / train_df['yr'].map(yr_baseline)
+test_df['cnt_relative'] = test_df['cnt'] / test_df['yr'].map(yr_baseline)
 
 feature_cols = [c for c in train_df.columns
                  if c not in ['instant', 'dteday', 'cnt', 'casual', 'registered', 'yr', 'cnt_relative']]
 X_train, y_train = train_df[feature_cols], train_df['cnt_relative']
 X_test, y_test = test_df[feature_cols], test_df['cnt_relative']
 
-model = XGBRegressor(n_estimators=300, max_depth=3, learning_rate=0.05, subsample=0.8, random_state=42, n_jobs=-1)
+model = XGBRegressor(**load_best_params())   # 07단계 튜닝 결과를 그대로 사용
 model.fit(X_train, y_train)
 pred = model.predict(X_test)
 

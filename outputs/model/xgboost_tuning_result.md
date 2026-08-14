@@ -2,26 +2,26 @@
 GridSearchCV, 5-fold 교차검증, scoring=neg_root_mean_squared_error
 
 ## 최적 하이퍼파라미터
-{'learning_rate': 0.05, 'max_depth': 3, 'n_estimators': 300, 'subsample': 0.8}
+{'learning_rate': 0.05, 'max_depth': 4, 'n_estimators': 300, 'subsample': 0.8}
 
-CV 최적 RMSE: 650.99
+CV 최적 RMSE: 588.27
 
 ## test set 성능
-- RMSE: 626.23
-- MAE: 428.57
-- R2: 0.9022
+- RMSE: 958.33
+- MAE: 774.09
+- R2: 0.7387
 
 ## 변수 중요도 (튜닝 후)
 | 변수 | 중요도 |
 |---|---|
-| yr | 0.3395 |
-| season | 0.1660 |
-| atemp | 0.1612 |
-| temp | 0.1514 |
-| weathersit | 0.0622 |
-| hum | 0.0292 |
-| mnth | 0.0201 |
-| holiday | 0.0191 |
-| windspeed | 0.0184 |
-| weekday | 0.0175 |
-| workingday | 0.0155 |
+| yr | 0.4071 |
+| atemp | 0.2066 |
+| temp | 0.1470 |
+| season | 0.0758 |
+| weathersit | 0.0647 |
+| hum | 0.0259 |
+| mnth | 0.0200 |
+| windspeed | 0.0169 |
+| workingday | 0.0127 |
+| holiday | 0.0122 |
+| weekday | 0.0110 |

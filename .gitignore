@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 data/train.csv
 data/test.csv
+
+# 로컬에서 그래프를 묶어둔 압축 파일 (원본 png가 이미 저장소에 있음)
+*.zip

@@ -6,6 +6,8 @@ from xgboost import XGBRegressor
 import matplotlib.pyplot as plt
 import matplotlib
 
+from common import load_best_params
+
 matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] = False
 
@@ -19,7 +21,7 @@ name_map = {
     'temp': 'temp(기온)', 'atemp': 'atemp(체감온도)', 'hum': 'hum(습도)', 'windspeed': 'windspeed(풍속)',
 }
 
-model = XGBRegressor(n_estimators=300, max_depth=3, learning_rate=0.05, subsample=0.8, random_state=42, n_jobs=-1)
+model = XGBRegressor(**load_best_params())   # 07단계 튜닝 결과를 그대로 사용
 model.fit(X_train, y_train)
 
 imp = pd.Series(model.feature_importances_, index=feature_cols).sort_values(ascending=True)
