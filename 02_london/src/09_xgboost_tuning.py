@@ -1,5 +1,5 @@
 """
-8단계: XGBoost 하이퍼파라미터 튜닝 (GridSearchCV, 5-fold TimeSeriesSplit, train=2015 내부에서만)
+9단계: XGBoost 하이퍼파라미터 튜닝 (GridSearchCV, 5-fold TimeSeriesSplit, train=2015 내부에서만)
 그리드는 워싱턴과 동일 범위 유지 (사용자 확정).
 """
 import pandas as pd

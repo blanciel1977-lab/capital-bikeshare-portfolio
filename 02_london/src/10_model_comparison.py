@@ -1,5 +1,5 @@
 """
-9단계: 모델 성능 비교 + baseline(train 평균 예측) 비교
+10단계: 모델 성능 비교 + baseline(train 평균 예측) 비교
 """
 import re
 import numpy as np
@@ -14,18 +14,27 @@ matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] = False
 
 
-def parse_metrics(path):
-    text = open(path, encoding='utf-8').read()
+def parse_metrics(text):
     rmse = float(re.findall(r'RMSE:\s*([\d.]+)', text)[-1])
     mae = float(re.findall(r'MAE:\s*([\d.]+)', text)[-1])
     r2 = float(re.findall(r'R2:\s*([\d.]+)', text)[-1])
     return rmse, mae, r2
 
 
-lr_rmse, lr_mae, lr_r2 = parse_metrics('outputs/model/linear_regression_result.md')
-rf_rmse, rf_mae, rf_r2 = parse_metrics('outputs/model/random_forest_result.md')
-xgb_rmse, xgb_mae, xgb_r2 = parse_metrics('outputs/model/xgboost_baseline_result.md')
-xgbt_rmse, xgbt_mae, xgbt_r2 = parse_metrics('outputs/model/xgboost_tuning_result.md')
+def parse_file(path):
+    return parse_metrics(open(path, encoding='utf-8').read())
+
+
+lr_rmse, lr_mae, lr_r2 = parse_file('outputs/model/linear_regression_result.md')
+rf_rmse, rf_mae, rf_r2 = parse_file('outputs/model/random_forest_result.md')
+xgb_rmse, xgb_mae, xgb_r2 = parse_file('outputs/model/xgboost_baseline_result.md')
+xgbt_rmse, xgbt_mae, xgbt_r2 = parse_file('outputs/model/xgboost_tuning_result.md')
+
+ridge_lasso_text = open('outputs/model/ridge_lasso_result.md', encoding='utf-8').read()
+ridge_block = ridge_lasso_text.split('## Ridge')[1].split('## Lasso')[0]
+lasso_block = ridge_lasso_text.split('## Lasso')[1]
+ridge_rmse, ridge_mae, ridge_r2 = parse_metrics(ridge_block)
+lasso_rmse, lasso_mae, lasso_r2 = parse_metrics(lasso_block)
 
 # baseline: train(2015) 평균만 예측
 train_df = pd.read_csv('data/processed/day_london_2015.csv')
@@ -33,15 +42,16 @@ test_df = pd.read_csv('data/processed/day_london_2016.csv')
 baseline_pred = np.full(len(test_df), train_df[TARGET_COL].mean())
 baseline_rmse = np.sqrt(mean_squared_error(test_df[TARGET_COL], baseline_pred))
 
-models = ['선형회귀', '랜덤포레스트', 'XGBoost\n(기본)', 'XGBoost\n(튜닝)']
-rmse = [lr_rmse, rf_rmse, xgb_rmse, xgbt_rmse]
-mae = [lr_mae, rf_mae, xgb_mae, xgbt_mae]
-r2 = [lr_r2, rf_r2, xgb_r2, xgbt_r2]
+model_names = ['선형회귀', 'Ridge', 'Lasso', '랜덤포레스트', 'XGBoost(기본)', 'XGBoost(튜닝)']
+models = ['선형회귀', 'Ridge', 'Lasso', '랜덤포레스트', 'XGBoost\n(기본)', 'XGBoost\n(튜닝)']
+rmse = [lr_rmse, ridge_rmse, lasso_rmse, rf_rmse, xgb_rmse, xgbt_rmse]
+mae = [lr_mae, ridge_mae, lasso_mae, rf_mae, xgb_mae, xgbt_mae]
+r2 = [lr_r2, ridge_r2, lasso_r2, rf_r2, xgb_r2, xgbt_r2]
 
 best_idx = int(np.argmin(rmse))
-best_name = ['선형회귀', '랜덤포레스트', 'XGBoost(기본)', 'XGBoost(튜닝)'][best_idx]
+best_name = model_names[best_idx]
 
-fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
+fig, axes = plt.subplots(1, 2, figsize=(16, 5.5))
 
 ax = axes[0]
 x = np.arange(len(models))
@@ -61,8 +71,8 @@ ax.legend()
 ax.grid(axis='y', linestyle='--', alpha=0.4)
 
 ax2 = axes[1]
-colors = ['#c9c9c9', '#7fa6c7', '#f2c14e', '#e07b39']
-bars3 = ax2.bar(models, r2, color=colors, width=0.5)
+colors = ['#c9c9c9', '#a8c4de', '#7fa6c7', '#4c72b0', '#f2c14e', '#e07b39']
+bars3 = ax2.bar(models, r2, color=colors, width=0.6)
 for b, v in zip(bars3, r2):
     ax2.text(b.get_x() + b.get_width() / 2, v + 0.01, f'{v:.4f}', ha='center', va='bottom', fontsize=10)
 ax2.set_ylim(0, 1)
@@ -77,7 +87,7 @@ plt.savefig('outputs/model/model_comparison.png', dpi=150, bbox_inches='tight')
 with open('outputs/model/model_comparison_summary.md', 'w', encoding='utf-8') as f:
     f.write('# 모델 성능 비교 (train=2015, test=2016)\n\n')
     f.write('| 순위 | 모델 | RMSE | MAE | R2 |\n|---|---|---|---|---|\n')
-    rows = sorted(zip(['선형회귀', '랜덤포레스트', 'XGBoost(기본)', 'XGBoost(튜닝)'], rmse, mae, r2), key=lambda x: x[1])
+    rows = sorted(zip(model_names, rmse, mae, r2), key=lambda x: x[1])
     for i, (name, rm, ma, r) in enumerate(rows, 1):
         mark = '**' if i == 1 else ''
         f.write(f'| {i} | {mark}{name}{mark} | {mark}{rm:,.2f}{mark} | {mark}{ma:,.2f}{mark} | {mark}{r:.4f}{mark} |\n')

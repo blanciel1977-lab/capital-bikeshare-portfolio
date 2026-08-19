@@ -69,8 +69,16 @@
 
 `02_london/docs/REPORT.md`를 워싱턴 REPORT.md와 동일한 8절 구조(데이터개요/품질점검/EDA/모델링/이상치탐지/결론/검증이력/한계)로 작성. 워싱턴과 다르게 나온 부분(최우수 모델이 XGBoost가 아닌 점, 습도 영향이 더 큰 점)을 숨기지 않고 "차이점"으로 명시했다.
 
+## 10. Ridge / Lasso 추가 및 스크립트 재정렬
+
+- 사용자가 "선형회귀 종류를 몇 가지 했나"라고 질문 → 단순 OLS 1종(스케일만 원본/표준화 2가지)이었음을 확인·답변한 뒤, "Ridge/Lasso도 추가로 돌려볼 수 있나" 질문에 실제로 실행
+- `RidgeCV`/`LassoCV` + TimeSeriesSplit(train 2015 내부에서만, XGBoost 튜닝과 동일 원칙)로 alpha 탐색. 결과: Ridge RMSE 4,357.40/R² 0.7501, Lasso RMSE 4,351.50/R² 0.7508 — 둘 다 일반 선형회귀보다 근소 개선되었으나 랜덤포레스트에는 못 미침. Lasso가 0으로 수렴시킨 변수는 없어 정규화 효과가 크지 않음(원래 과적합이 아니었다는 뜻)을 확인
+- 사용자가 "반영"을 요청 → `10_model_comparison.py`가 Ridge/Lasso 결과까지 파싱하도록 수정, `model_comparison.png`/`model_comparison_summary.md` 재생성(6개 모델 비교로 확장)
+- **스크립트 실행 순서 정합성을 위해 번호를 재정렬**: 신규 스크립트는 `10_model_comparison.py`(모델 비교, Ridge/Lasso 포함해 파싱)보다 먼저 실행돼야 하므로, `14_ridge_lasso.py`로 만들었던 파일을 `08_ridge_lasso.py`로 옮기고 이후 08~13번을 전부 한 칸씩 밀었다(09_xgboost_tuning ~ 14_prediction_band). 각 파일 docstring의 "N단계" 표기도 함께 수정하고, 재배치 후 08~11번을 재실행해 결과가 그대로 재현됨을 확인
+- `README.md`, `REPORT.md`의 모델 비교 표와 스크립트 목록·재현 방법을 6개 모델/새 번호 기준으로 갱신
+
 ## 다음 단계 (미착수)
 
 - weather_code 최빈값 동률 처리("더 나쁜 코드 우선")가 실제로 몇 건 발생했는지 아직 집계 안 함(변환 단계 이월 항목)
 - 이상치 vs 예측오차 Top10 교집합 비교(워싱턴에서 수행했던 것)는 이번엔 진행 안 함 — REPORT 8절 한계로 명시
-- git commit 아직 안 함
+- 이번 재정렬·Ridge/Lasso 추가분 git commit/push 아직 안 함 (기존 `london_bike` 저장소도 재동기화 필요)

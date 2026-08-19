@@ -16,9 +16,11 @@
 | 순위 | 모델 | RMSE | MAE | R2 |
 |---|---|---|---|---|
 | 1 | **랜덤포레스트** | **4,308.82** | **3,169.69** | **0.7556** |
-| 2 | 선형회귀 | 4,359.46 | 3,387.17 | 0.7499 |
-| 3 | XGBoost (튜닝) | 4,419.45 | 3,148.64 | 0.7429 |
-| 4 | XGBoost (기본값) | 4,931.37 | 3,477.51 | 0.6799 |
+| 2 | Lasso | 4,351.50 | 3,381.41 | 0.7508 |
+| 3 | Ridge | 4,357.40 | 3,385.77 | 0.7501 |
+| 4 | 선형회귀 | 4,359.46 | 3,387.17 | 0.7499 |
+| 5 | XGBoost (튜닝) | 4,419.45 | 3,148.64 | 0.7429 |
+| 6 | XGBoost (기본값) | 4,931.37 | 3,477.51 | 0.6799 |
 
 ## 워싱턴에서 배운 교훈을 처음부터 반영한 3가지
 
@@ -60,12 +62,13 @@ Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 �
 │   ├── 05_linear_regression.py
 │   ├── 06_random_forest.py
 │   ├── 07_xgboost_baseline.py
-│   ├── 08_xgboost_tuning.py
-│   ├── 09_model_comparison.py
-│   ├── 10_feature_importance.py
-│   ├── 11_shap_analysis.py
-│   ├── 12_anomaly_detection.py
-│   ├── 13_prediction_band.py     예측 밴드 vs 실제값 데이터 생성
+│   ├── 08_ridge_lasso.py         Ridge/Lasso (정규화 선형회귀)
+│   ├── 09_xgboost_tuning.py
+│   ├── 10_model_comparison.py
+│   ├── 11_feature_importance.py
+│   ├── 12_shap_analysis.py
+│   ├── 13_anomaly_detection.py
+│   ├── 14_prediction_band.py     예측 밴드 vs 실제값 데이터 생성
 │   └── common.py                 공통 설정 (입력 변수 목록, 최적 하이퍼파라미터)
 ├── outputs/
 │   ├── quality/, eda/, model/, anomaly/
@@ -90,12 +93,13 @@ python src/04_eda_visualizations.py
 python src/05_linear_regression.py
 python src/06_random_forest.py
 python src/07_xgboost_baseline.py
-python src/08_xgboost_tuning.py      # GridSearchCV, 수 분 소요
-python src/09_model_comparison.py
-python src/10_feature_importance.py
-python src/11_shap_analysis.py
-python src/12_anomaly_detection.py
-python src/13_prediction_band.py
+python src/08_ridge_lasso.py
+python src/09_xgboost_tuning.py      # GridSearchCV, 수 분 소요
+python src/10_model_comparison.py    # 08, 09 결과를 함께 파싱하므로 반드시 그 뒤에 실행
+python src/11_feature_importance.py
+python src/12_shap_analysis.py
+python src/13_anomaly_detection.py
+python src/14_prediction_band.py
 ```
 
 ## 데이터 출처

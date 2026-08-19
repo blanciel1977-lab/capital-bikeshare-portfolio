@@ -1,5 +1,5 @@
 """
-12단계: Isolation Forest 이상치 탐지 (2015+2016 전체, 727일)
+13단계: Isolation Forest 이상치 탐지 (2015+2016 전체, 727일)
 워싱턴과 동일 설정(contamination=5%)으로 시작 (사용자 확정).
 """
 import pandas as pd

@@ -1,5 +1,5 @@
 """
-11단계: SHAP 분석 (최우수 모델 = 랜덤포레스트 기준)
+12단계: SHAP 분석 (최우수 모델 = 랜덤포레스트 기준)
 """
 import matplotlib
 matplotlib.use('Agg')
