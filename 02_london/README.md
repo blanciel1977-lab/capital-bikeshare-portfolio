@@ -75,6 +75,12 @@ Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 �
 
 외부 뉴스([Cycling Weekly](https://www.cyclingweekly.com/news/latest-news/tube-strike-forces-londoners-take-bikes-305938))로 대조한 결과, 이 날은 **런던 지하철 전면파업일**로 실제 자전거 대여 서비스가 개시 이래 최다 이용일(73,094건)을 기록한 날과 정확히 일치했다. 날씨 변수만으로는 절대 설명할 수 없는 사회적 이벤트가 이상치로 정확히 잡힌 사례다 — 워싱턴에서 허리케인 샌디를 찾아낸 것과 같은 성격의 검증이다.
 
+**37건 각각의 1차 원인 변수**도 z-score 기준(연속형 변수 중 전체 평균에서 가장 크게 벗어난 변수)으로 분해했다(`src/19_anomaly_root_cause.py`).
+
+![이상치 1차 원인 변수 분해](outputs/anomaly/isoforest_root_cause.png)
+
+체감기온·습도·풍속·대여수 4개 변수가 24~27%씩 고르게 원인으로 나타나, 어느 한 변수가 압도적으로 지배하지 않고 **다양한 기상 조건 조합이 각기 다른 이상치를 만든다**는 것을 보여준다. 오른쪽 산점도에서 습도(주황) 원인은 저온·고습 구간(좌상단), 풍속(초록) 원인은 중간 기온대 넓게 분포한다는 패턴도 확인할 수 있다.
+
 ## 강건성 검증: 결론을 스스로 의심해봤다
 
 최우수 모델이라는 결론이 우연이 아닌지 두 가지 방식으로 재검증했다(`docs/REPORT.md` 4.5~4.6절).
@@ -121,6 +127,7 @@ Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 �
 │   ├── 16_onehot_ridge.py            강건성 검증: 원-핫 인코딩 + Ridge 재실험
 │   ├── 17_anomaly_visualization.py   이상치 탐지 결과 정적 시각화(README 임베드용)
 │   ├── 18_prediction_band_static.py  예측 밴드 정적 시각화(README 임베드용)
+│   ├── 19_anomaly_root_cause.py      이상치 1차 원인 변수 분해(z-score)
 │   └── common.py                 공통 설정 (입력 변수 목록, 최적 하이퍼파라미터)
 ├── outputs/
 │   ├── quality/, eda/, model/, anomaly/
@@ -157,6 +164,7 @@ python src/15_log_target_comparison.py   # 강건성 검증(선택)
 python src/16_onehot_ridge.py            # 강건성 검증(선택)
 python src/17_anomaly_visualization.py   # README용 정적 이미지
 python src/18_prediction_band_static.py  # README용 정적 이미지
+python src/19_anomaly_root_cause.py      # README용 정적 이미지
 ```
 
 ## 데이터 출처
