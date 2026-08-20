@@ -32,6 +32,15 @@
 | 5 | XGBoost (튜닝) | 4,419.45 | 3,148.64 | 0.7429 |
 | 6 | XGBoost (기본값) | 4,931.37 | 3,477.51 | 0.6799 |
 
+## 탐색적 데이터 분석(EDA)
+
+| | |
+|---|---|
+| ![체감기온 vs 대여량 산점도](outputs/eda/t2_vs_cnt_scatter.png) | ![체감기온 vs 대여량 hexbin](outputs/eda/t2_vs_cnt_hexbin.png) |
+| ![날씨코드별 대여량 박스플롯](outputs/eda/weather_code_vs_cnt_boxplot.png) | ![계절 x 요일 히트맵](outputs/eda/season_weekday_heatmap.png) |
+
+체감기온(t2)과 대여량은 뚜렷한 양의 상관(r=0.626), 날씨코드는 1(맑음)→26(눈)으로 악화될수록 대여량이 감소하는 경향, 계절×요일 히트맵은 계절 효과가 요일 효과보다 지배적임을 보여준다(자세한 수치는 [핵심 결과 요약](#핵심-결과-요약)과 `outputs/eda/correlation_summary.md` 참고).
+
 ## 워싱턴에서 배운 교훈을 처음부터 반영한 3가지
 
 워싱턴 프로젝트([01_washington](../01_washington))는 `yr`(연도) 변수의 외삽 불가 문제, 다중공선성, 무작위 분할의 함정을 **분석을 다 끝낸 뒤에야 발견**했다. 런던에서는 같은 실수를 반복하지 않기 위해 계획 수립 단계에서 미리 실측 검증했다.
@@ -62,6 +71,8 @@
 
 Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 이상치로 탐지했다. 상위권 대부분은 눈·강풍·고습도가 겹친 겨울날이었지만, **가장 눈에 띄는 발견은 2015-07-09(대여량 72,504건, 전체 최고 수준)**였다.
 
+![Isolation Forest 이상치 탐지 결과](outputs/anomaly/isoforest_anomalies.png)
+
 외부 뉴스([Cycling Weekly](https://www.cyclingweekly.com/news/latest-news/tube-strike-forces-londoners-take-bikes-305938))로 대조한 결과, 이 날은 **런던 지하철 전면파업일**로 실제 자전거 대여 서비스가 개시 이래 최다 이용일(73,094건)을 기록한 날과 정확히 일치했다. 날씨 변수만으로는 절대 설명할 수 없는 사회적 이벤트가 이상치로 정확히 잡힌 사례다 — 워싱턴에서 허리케인 샌디를 찾아낸 것과 같은 성격의 검증이다.
 
 ## 강건성 검증: 결론을 스스로 의심해봤다
@@ -75,7 +86,9 @@ Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 �
 
 ## 예측 밴드 시각화
 
-최우수 모델(랜덤포레스트) 300개 트리의 예측 분포로 10~90 백분위(80%) 밴드를 만들어 2016년 실제값과 겹쳐 봤다(`outputs/model/prediction_band_2016.html`).
+최우수 모델(랜덤포레스트) 300개 트리의 예측 분포로 10~90 백분위(80%) 밴드를 만들어 2016년 실제값과 겹쳐 봤다. 인터랙티브 버전은 [outputs/model/prediction_band_2016.html](outputs/model/prediction_band_2016.html)(툴팁으로 날짜별 조회 가능).
+
+![예측 밴드 vs 실제값](outputs/model/prediction_band_2016.png)
 
 - 밴드 안에 들어간 날: **254일 / 365일 (69.6%)**
 - 명목 80% 구간인데 실측 커버리지가 69.6%로 낮은 이유: 이 밴드는 트리 간 예측 분산(모델 불확실성)만 반영하고, 데이터 자체의 순수 잔차(residual noise)는 포함하지 않기 때문이다. 실무 적용 시 conformal prediction 등으로 보정이 필요하다는 한계를 리포트에 명시했다.
@@ -106,6 +119,8 @@ Isolation Forest(contamination 5%)로 2015~2016년 727일 중 37일(5.09%)을 �
 │   ├── 14_prediction_band.py     예측 밴드 vs 실제값 데이터 생성
 │   ├── 15_log_target_comparison.py   강건성 검증: log(cnt) 변환 재비교
 │   ├── 16_onehot_ridge.py            강건성 검증: 원-핫 인코딩 + Ridge 재실험
+│   ├── 17_anomaly_visualization.py   이상치 탐지 결과 정적 시각화(README 임베드용)
+│   ├── 18_prediction_band_static.py  예측 밴드 정적 시각화(README 임베드용)
 │   └── common.py                 공통 설정 (입력 변수 목록, 최적 하이퍼파라미터)
 ├── outputs/
 │   ├── quality/, eda/, model/, anomaly/
@@ -140,6 +155,8 @@ python src/13_anomaly_detection.py
 python src/14_prediction_band.py
 python src/15_log_target_comparison.py   # 강건성 검증(선택)
 python src/16_onehot_ridge.py            # 강건성 검증(선택)
+python src/17_anomaly_visualization.py   # README용 정적 이미지
+python src/18_prediction_band_static.py  # README용 정적 이미지
 ```
 
 ## 데이터 출처
